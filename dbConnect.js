@@ -1,5 +1,4 @@
 const { Sequelize } = require('sequelize');
-const { MySqlDialect } = require('@sequelize/mysql');
 
 const sequelize = new Sequelize({
     database: 'mydb',
