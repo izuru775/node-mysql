@@ -20,14 +20,28 @@ This project is a simple Node.js application that uses Express for the web serve
     npm install
     ```
 
-3. Set up your MySQL database and update the connection details in [dbConnect.js]:
+3. Set up your MySQL database and update the connection details in a `.env` file:
+    ```sh
+    touch .env
+    ```
+
+    Add the following content to the `.env` file:
+    ```env
+    DB_DATABASE=mydb
+    DB_USERNAME=root
+    DB_PASSWORD=toor
+    DB_HOST=localhost
+    DB_DIALECT=mysql
+    ```
+
+4. Update the connection details in [dbConnect.js] to use environment variables:
     ```js
     const sequelize = new Sequelize({
-        database: 'mydb',
-        username: 'root',
-        password: 'toor',
-        host: 'localhost',
-        dialect: 'mysql',
+        database: process.env.DB_DATABASE,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
+        dialect: process.env.DB_DIALECT,
     });
     ```
 
@@ -46,5 +60,3 @@ This project is a simple Node.js application that uses Express for the web serve
 
 - The first time you run the application, it will synchronize the database tables. You can comment out the [await syncDatabase();] line in [app.js] after the first run to avoid re-syncing the tables.
 - Make sure to use hashed passwords in production for better security.
-
-
