@@ -1,32 +1,27 @@
+require('dotenv').config(); // Import the dotenv module and configure it
 const express = require('express'); // Import the express module
 const app = express(); // Create an instance of express
 const port = 3000; // Define the port number
-const { connect } = require('./dbConnect.js'); // Import the connect function from dbConnect.js
-const { User, syncDatabase } = require('./models/userModel.js'); // Import the User model and syncDatabase function from userModel.js
+const router = require('./routes/index.js'); // Import the router from routes/index.js
+const sessionMiddleware = require('./config/createSession.js'); // Import the session middleware from config/createSession.js
+const { connect } = require('./config/dbConnect.js'); // Import the sequelize object from config/dbConnect.js
+const passport = require('./config/passport');
 
-connect(); // Establish a connection to the database
+app.set('trust proxy', 1); // Trust first proxy
 
-// Function to run the database operations
-async function run() {
-    await syncDatabase(); // Sync the database tables (comment this out after the first run)
+app.use(express.json()); // Enable JSON parsing for request bodies
+app.use(express.urlencoded({ extended: true })); // Enable URL-encoded parsing for request bodies
 
-    // Create a new user
-    const newUser = await User.create({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        password: 'securepassword123', // Make sure to use a hashed password in production.
-        location: 'New York',
-        dept: 'Engineering',
-    });
+app.use(sessionMiddleware); // Use the session middleware
+app.use(passport.initialize()); // Initialize passport
+app.use(passport.session()); // Use passport session
 
-    console.log('New user created:', newUser.toJSON()); // Log the new user details
-}
+app.use('/images', express.static('public/images')); // Serve static files from the 'public/images' directory
 
-run().catch((error) => {
-    console.error('Error:', error.message); // Catch and log any errors
-});
+app.use(router); // Use the router
+
+connect(); // Connect to the database
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`); // Start the server and listen on the specified port
-});
+})
