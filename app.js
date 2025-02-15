@@ -1,7 +1,7 @@
 const express = require('express'); // Import the express module
 const app = express(); // Create an instance of express
 const port = 3000; // Define the port number
-const { connect } = require('./dbConnect.js'); // Import the connect function from dbConnect.js
+const { connect } = require('./config/dbConnect.js'); // Import the connect function from dbConnect.js
 const { User, syncDatabase } = require('./models/userModel.js'); // Import the User model and syncDatabase function from userModel.js
 
 connect(); // Establish a connection to the database

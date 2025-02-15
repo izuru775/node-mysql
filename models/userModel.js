@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const { sequelize } = require('../dbConnect.js')
+const { sequelize } = require('../config/dbConnect.js')
 
 /**
  * User model definition.
@@ -59,4 +59,4 @@ async function syncDatabase() {
 }
 
 
-module.exports= {User, syncDatabase};
+module.exports = { User, syncDatabase };
